@@ -12,6 +12,8 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post("/screenshot", async (req, res) => {
+  res.status(200).json({}).end();
+
   const { projectId, versionNumber } = req.body;
 
   const project = await db
@@ -21,7 +23,6 @@ app.post("/screenshot", async (req, res) => {
     .executeTakeFirst();
 
   if (!project) {
-    res.status(404).json({});
     return;
   }
 
@@ -33,7 +34,6 @@ app.post("/screenshot", async (req, res) => {
     .executeTakeFirst();
 
   if (!version) {
-    res.status(404).json({});
     return;
   }
 
@@ -68,8 +68,6 @@ app.post("/screenshot", async (req, res) => {
     .execute();
 
   await browser.close();
-
-  res.status(200).json({});
 });
 
 app.listen(3000);
