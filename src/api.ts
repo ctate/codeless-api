@@ -46,6 +46,8 @@ app.post("/screenshot", async (req, res) => {
   const page = await browser.newPage();
   await page.goto(dataUrl);
 
+  await new Promise((res) => setTimeout(res, 1000));
+
   const screenshot = await page.screenshot({ type: "png" });
 
   const { url: imageUrl } = await put(
