@@ -16,9 +16,6 @@ app.post("/screenshot", async (req, res) => {
 
   const { projectId, versionNumber } = req.body;
 
-  console.log("screenshot");
-  console.log({ projectId, versionNumber });
-
   const project = await db
     .selectFrom("projects")
     .select("ownerUserId")
@@ -60,8 +57,6 @@ app.post("/screenshot", async (req, res) => {
       access: "public",
     }
   );
-
-  console.log(imageUrl);
 
   await db
     .updateTable("projectVersions")
