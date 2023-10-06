@@ -58,6 +58,8 @@ app.post("/screenshot", async (req, res) => {
     }
   );
 
+  console.log(imageUrl);
+
   await db
     .updateTable("projectVersions")
     .set({
