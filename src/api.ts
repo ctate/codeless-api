@@ -43,31 +43,36 @@ app.post("/screenshot", async (req, res) => {
   const browser = await puppeteer.launch({
     headless: "new",
   });
-  const page = await browser.newPage();
-  await page.goto(dataUrl);
 
-  await new Promise((res) => setTimeout(res, 1000));
+  try {
+    const page = await browser.newPage();
+    await page.goto(dataUrl);
 
-  const screenshot = await page.screenshot({ type: "png" });
+    await new Promise((res) => setTimeout(res, 1000));
 
-  const { url: imageUrl } = await put(
-    `projects/${projectId}/versions/${versionNumber}/screenshot.png`,
-    screenshot,
-    {
-      access: "public",
-    }
-  );
+    const screenshot = await page.screenshot({ type: "png" });
 
-  await db
-    .updateTable("projectVersions")
-    .set({
-      imageUrl,
-    })
-    .where("projectId", "=", projectId)
-    .where("number", "=", versionNumber)
-    .execute();
+    const { url: imageUrl } = await put(
+      `projects/${projectId}/versions/${versionNumber}/screenshot.png`,
+      screenshot,
+      {
+        access: "public",
+      }
+    );
 
-  await browser.close();
+    await db
+      .updateTable("projectVersions")
+      .set({
+        imageUrl,
+      })
+      .where("projectId", "=", projectId)
+      .where("number", "=", versionNumber)
+      .execute();
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await browser.close();
+  }
 });
 
 app.listen(3000);
